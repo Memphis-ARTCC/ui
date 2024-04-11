@@ -1,0 +1,1 @@
+export const canAirports = ["ATM", "DATM", "TA", "WM", "AWM", "FW", "AFE"];
