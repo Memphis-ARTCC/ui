@@ -6,7 +6,7 @@ type ContainerProps = {
 
 export const Container = ({ children, className }: ContainerProps) => {
     return (
-        <div className={`mx-[18%] ${className ?? ""}`}>
+        <div className={`mx-[15%] ${className ?? ""}`}>
             {children}
         </div>
     );

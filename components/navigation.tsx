@@ -27,7 +27,7 @@ export const Navigation = () => {
     return (
         <>
             <div className={`h-[190px] w-full ${image ?? "header-image-1"}`}></div>
-            <div className="py-6 mb-8 bg-gray-400 dark:bg-sky-900">
+            <div className="py-6 mb-8 bg-gray-300 dark:bg-gray-700">
                 <div className="mx-[12%]">
                     <div className="flex items-center justify-between w-full h-10 p-8 dark:text-white">
                         <div className="justify-start">
