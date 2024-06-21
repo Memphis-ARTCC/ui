@@ -1,0 +1,118 @@
+// non bootstrap customizations
+// Header images
+.header-image-1 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/memphis.jpg");
+    background-position: top 38% center;
+}
+
+.header-image-2 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/memphis2.jpg");
+    background-position: top 38% center;
+}
+
+.header-image-3 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/nashville.jpg");
+    background-position: top 55% center;
+}
+
+.header-image-4 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/nashville2.jpg");
+    background-position: top 60% center;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap";
+
+// bootstrap customizations
+
+$bg-gray-600: rgb(75, 85, 99);
+$nav-hover: rgb(100, 115, 135);
+$text-hover: rgb(200, 200, 200);
+
+.navbar {
+    padding: 0;
+}
+
+.navbar-nav {
+
+    .nav-link {
+        font-size: larger;
+        color: white;
+
+        &:hover {
+            transition: all 0.1s;
+            color: $text-hover;
+        }
+    }
+
+    .nav-link.active,
+    .nav-link.show {
+        font-size: larger;
+        color: white;
+
+        &:hover {
+            transition: all 0.1s;
+            color: $text-hover;
+        }
+    }
+}
+
+.dropdown {
+    .dropdown-menu {
+        background-color: $bg-gray-600;
+    }
+
+    .dropdown-item {
+        color: white;
+        font-size: large;
+
+        &:hover {
+            transition: all 0.1s;
+            background-color: $nav-hover;
+        }
+    }
+}
+
+.table {
+    color: white;
+
+    th {
+        background-color: $bg-gray-600;
+        color: white;
+    }
+
+    td {
+        background-color: $bg-gray-600;
+        color: white;
+    }
+}
