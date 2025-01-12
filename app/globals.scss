@@ -1,0 +1,127 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+@import "~bootstrap";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.header-image-1 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/memphis.jpg");
+    background-position: top 38% center;
+}
+
+.header-image-2 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/memphis2.jpg");
+    background-position: top 38% center;
+}
+
+.header-image-3 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/nashville.jpg");
+    background-position: top 55% center;
+}
+
+.header-image-4 {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+    background-image: url("/images/nashville2.jpg");
+    background-position: top 60% center;
+}
+
+$bg-gray-600: #4b5563;
+$bg-gray-700: #374151;
+$bg-gray-800: #1f2937;
+$bg-gray-900: #111827;
+
+$bg-slate-700: #334155;
+
+$nav-hover: #3f444f;
+$text-hover: rgb(200, 200, 200);
+
+.navbar {
+    padding: 0;
+}
+
+.navbar-nav {
+
+    .nav-link {
+        font-size: larger;
+        color: white;
+
+        &:hover {
+            transition: all 0.1s;
+            color: $text-hover;
+        }
+    }
+
+    .nav-link.active,
+    .nav-link.show {
+        font-size: larger;
+        color: white;
+
+        &:hover {
+            transition: all 0.1s;
+            color: $text-hover;
+        }
+    }
+}
+
+.dropdown {
+    .dropdown-menu {
+        background-color: $bg-gray-800;
+        transition: all 0.1s;
+    }
+
+    .dropdown-item {
+        color: white;
+        font-size: large;
+
+        &:hover {
+            transition: all 0.1s;
+            background-color: $nav-hover;
+        }
+    }
+}
+
+.table {
+    color: white;
+
+    th {
+        background-color: $bg-gray-600;
+        color: white;
+    }
+
+    td {
+        background-color: $bg-gray-600;
+        color: white;
+    }
+}
+
+@layer base {
+    :root {
+        --radius: 0.5rem;
+    }
+}
