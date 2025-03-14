@@ -36,7 +36,7 @@ export type RosterUser = {
     visitorFrom?: string;
     ground?: Certification;
     tower?: Certification;
-    radar?: Certification;
+    tracon?: Certification;
     center?: Certification;
     roles?: Role[]
 }

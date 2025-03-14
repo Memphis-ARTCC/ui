@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "./globals.scss";
 import "react-toastify/dist/ReactToastify.min.css";
@@ -10,11 +9,6 @@ import Sidebar from "@/components/Sidebar";
 import { ToastContainer } from "react-toastify";
 
 const ubuntu = Ubuntu({ weight: "400", subsets: ["latin"] });
-
-export const metadata: Metadata = {
-    title: "Home | Memphis ARTCC",
-    description: "Memphis ARTCC"
-};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (

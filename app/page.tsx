@@ -1,9 +1,13 @@
 "use client";
 
+import { Trophy } from "lucide-react";
 import { Token } from "@/models/auth/token";
+import { Stats } from "@/models/stats";
+import { Response } from "@/models/response";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "./Providers";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 
 export default function Home() {
@@ -13,11 +17,38 @@ export default function Home() {
     const [user, setUser] = useState(null as Token | null);
     const [isMember, setIsMember] = useState(false);
 
+    const [loadingTop, setLoadingTop] = useState(true);
+
+    const [top, setTop] = useState([] as Stats[]);
+
     useEffect(() => {
+        document.title = "Home | Memphis ARTCC";
         if (auth?.user) {
             setUser(auth.user);
             setIsMember(auth.user.isMember);
         }
+        const fetchTopControllers = async () => {
+            const response = await fetch(`${process.env.API_URL}/stats/top`, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+            }
+            return await response.json() as Response<Stats[]>;
+        };
+        fetchTopControllers()
+            .then((response) => {
+                setTop(response.data);
+                setLoadingTop(false);
+            })
+            .catch((error) => {
+                console.log(`Error fetching top controllers:\n${error}`);
+                toast.error("Error fetching top controllers");
+                setLoadingTop(false);
+            });
     }, [auth]);
 
     return (
@@ -56,7 +87,51 @@ export default function Home() {
                 Top Controllers
             </div>
             <div className="bg-gray-700 rounded-2xl shadow-md p-3">
-                Testing
+                {top.length > 0 ? (
+                    <div className="flex items-end justify-center gap-8 mt-10">
+                        <div className="flex flex-col items-center w-32 h-24">
+                            <Trophy className="w-8 h-8 text-gray-400 mb-1" />
+                            {top[1] ? (
+                                <>
+                                    <span className="text-lg">{top[1].firstName} {top[1].lastName}</span>
+                                    <span className="text-lg">{top[1].totalHours} hrs</span>
+                                </>
+                            ) : (
+                                <span>-</span>
+                            )}
+                        </div>
+                        <div className="flex flex-col items-center w-40 h-28">
+                            <Trophy className="w-10 h-10 text-yellow-500 mb-1" />
+                            {top[0] ? (
+                                <>
+                                    <span className="text-lg">{top[0].firstName} {top[0].lastName}</span>
+                                    <span className="text-lg">{top[0].totalHours} hrs</span>
+                                </>
+                            ) : (
+                                <span>-</span>
+                            )}
+                        </div>
+                        <div className="flex flex-col items-center w-32 h-24">
+                            <Trophy className="w-8 h-8 text-orange-600 mb-1" />
+                            {top[2] ? (
+                                <>
+                                    <span className="text-lg">{top[2].firstName} {top[2].lastName}</span>
+                                    <span className="text-lg">{top[2].totalHours} hrs</span>
+                                </>
+                            ) : (
+                                <span>-</span>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <>
+                        {loadingTop ? (
+                            <div className="text-xl">Loading...</div>
+                        ) : (
+                            <div className="text-xl">No top controllers found</div>
+                        )}
+                    </>
+                )}
             </div>
         </div>
     );

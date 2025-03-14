@@ -18,6 +18,31 @@ import {
 } from "@/components/ui/table";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import Spinner from "@/components/Spinner";
+import { Certification } from "@/models/certification";
+
+type CertificationProps = {
+    certification: Certification;
+}
+
+const Certifiation = ({ certification }: CertificationProps) => {
+    return (
+        <>
+            {certification.solo ? (
+                <TableCell className="text-yellow-500 text-lg">
+                    S
+                </TableCell>
+            ) : (
+                <TableCell>
+                    <div className="flex justify-center">
+                        <Check size={24} className="text-green-600" />
+                    </div>
+                </TableCell>
+            )}
+        </>
+    );
+};
+
 
 export default function Roster() {
 
@@ -43,17 +68,20 @@ export default function Roster() {
             }
             return await response.json() as Response<RosterUser[]>;
         };
-        fetchRoster()
-            .then((response) => {
-                setRoster(response.data);
-            })
-            .catch((error) => {
-                console.log(`Error fetching roster:\n${error}`);
-                toast.error("Error fetching roster");
-            });
+        if (authContext?.isLoggedIn()) {
+            fetchRoster()
+                .then((response) => {
+                    setRoster(response.data);
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    console.log(`Error fetching roster:\n${error}`);
+                    toast.error("Error fetching roster");
+                    setLoading(false);
+                });
+        }
         setCanRoster(authContext?.hasRoles(CAN_ROSTER) ?? false);
-        setLoading(false);
-    }, [authContext]);
+    }, [authContext, loading]);
 
     return (
         <AuthRoute>
@@ -67,64 +95,94 @@ export default function Roster() {
                     <Table className="bg-gray-700 rounded-2xl shadow-md p-3">
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="text-white">Name</TableHead>
-                                <TableHead className="text-white text-center">Status</TableHead>
-                                <TableHead className="text-white text-center">Ground</TableHead>
-                                <TableHead className="text-white text-center">Tower</TableHead>
-                                <TableHead className="text-white text-center">Approach</TableHead>
-                                <TableHead className="text-white text-center">Center</TableHead>
+                                <TableHead className="text-white text-lg text-nowrap">Name</TableHead>
+                                <TableHead className="text-white text-center text-lg text-nowrap">Status</TableHead>
+                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Ground</TableHead>
+                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Tower</TableHead>
+                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Tracon</TableHead>
+                                <TableHead className="text-white text-center text-lg text-nowrap">Center</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {roster.map((user) => (
-                                <TableRow key={user.cid}>
-                                    <TableCell className="text-left min-w-[300px]">
-                                        <div className="flex flex-col">
-                                            <div className="text-lg">
-                                                {canRoster ? (
-                                                    <Link href={`/roster/edit/${user.cid}`}>
-                                                        <span className="font-bold">{user.name}</span> ({user.initials})
-                                                    </Link>
-                                                ) : (
-                                                    <>
-                                                        <span className="font-bold">{user.name}</span> ({user.initials})
-                                                    </>
-                                                )}
-                                            </div>
-                                            {user.roles && user.roles.length > 0 ? (
-                                                <div>
-                                                    {user.roles.at(0)?.name} ({getShortRatingString(user.rating)})
+                            {roster.length > 0 ? (
+                                <>
+                                    {roster.map((user) => (
+                                        <TableRow key={user.cid} className="h-full">
+                                            <TableCell className="text-left min-w-[300px]">
+                                                <div className="flex flex-col">
+                                                    <div className="text-xl">
+                                                        {canRoster ? (
+                                                            <Link href={`/roster/edit/${user.cid}`}>
+                                                                <span className="font-bold">{user.name}</span> ({user.initials})
+                                                            </Link>
+                                                        ) : (
+                                                            <>
+                                                                <span className="font-bold">{user.name}</span> ({user.initials})
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                    {user.roles && user.roles.length > 0 ? (
+                                                        <div className="text-lg">
+                                                            {user.roles.at(0)?.name} ({getShortRatingString(user.rating)})
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-lg">
+                                                            {getRatingString(user.rating)} ({getShortRatingString(user.rating)})
+                                                        </div>
+                                                    )}
                                                 </div>
+                                            </TableCell>
+                                            <TableCell className="text-lg">
+                                                {getUserStatusString(user.status)}
+                                            </TableCell>
+                                            {user.ground ? (
+                                                <Certifiation certification={user.ground} />
                                             ) : (
-                                                <div>
-                                                    {getRatingString(user.rating)} ({getShortRatingString(user.rating)})
-                                                </div>
-                                            )}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        {getUserStatusString(user.status)}
-                                    </TableCell>
-                                    {user.ground ? (
-                                        <>
-                                            {user.ground.solo ? (
-                                                <TableCell className="bg-yellow-500">
-                                                    Solo
-                                                </TableCell>
-
-                                            ) : (
-                                                <TableCell className="bg-success">
-                                                    <Check size={24} />
+                                                <TableCell>
+                                                    <div className="text-center"> - </div>
                                                 </TableCell>
                                             )}
-                                        </>
+                                            {user.tower ? (
+                                                <Certifiation certification={user.tower} />
+                                            ) : (
+                                                <TableCell>
+                                                    <div className="text-center"> - </div>
+                                                </TableCell>
+                                            )}
+                                            {user.tracon ? (
+                                                <Certifiation certification={user.tracon} />
+                                            ) : (
+                                                <TableCell>
+                                                    <div className="text-center"> - </div>
+                                                </TableCell>
+                                            )}
+                                            {user.center ? (
+                                                <Certifiation certification={user.center} />
+                                            ) : (
+                                                <TableCell>
+                                                    <div className="text-center"> - </div>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    ))}
+                                </>
+                            ) : (
+                                <>
+                                    {loading ? (
+                                        <TableRow>
+                                            <TableCell colSpan={6}>
+                                                <Spinner />
+                                            </TableCell>
+                                        </TableRow>
                                     ) : (
-                                        <TableCell>
-                                            <div className="text-center"> - </div>
-                                        </TableCell>
+                                        <TableRow>
+                                            <TableCell colSpan={6} className="text-center">
+                                                No users found
+                                            </TableCell>
+                                        </TableRow>
                                     )}
-                                </TableRow>
-                            ))}
+                                </>
+                            )}
                         </TableBody>
                     </Table>
                 </div>

@@ -172,20 +172,21 @@ export default function Airports() {
         fetchAirports()
             .then((response) => {
                 setAirports(response.data);
+                setLoading(false);
             })
             .catch((error) => {
                 console.log(`Error fetching airports:\n${error}`);
                 toast.error("Error fetching airports");
+                setLoading(false);
             });
         setCanAirports(authContext?.hasRoles(CAN_AIRPORTS) ?? false);
-        setLoading(false);
     }, [authContext]);
 
     return (
         <div className="text-white w-100 text-center">
             <div className="flex flex-row justify-center">
                 <div className="text-3xl text-center mb-4">
-                        Airports
+                    Airports
                 </div>
                 {canAirports ? (
                     <div className="text-lg text-white ms-2 mt-2">
@@ -265,157 +266,163 @@ export default function Airports() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {!loading ? (
+                    {airports.length > 0 ? (
                         <>
-                            {airports.length > 0 ? (
-                                <>
-                                    {airports.map((airport) => (
-                                        <TableRow key={airport.id} className="text-left text-lg">
-                                            <TableCell>
-                                                <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-                                                    <DialogTrigger>
-                                                        {airport.name}
-                                                    </DialogTrigger>
-                                                    <DialogContent className="bg-gray-700">
-                                                        <DialogHeader>
-                                                            <DialogTitle className="text-white text-xl font-normal">{airport.name}</DialogTitle>
-                                                            <div className="text-lg text-white">
-                                                                <div>{airport.metarRaw}</div>
-                                                                <Table>
-                                                                    <TableBody className="text-lg">
-                                                                        <TableRow>
-                                                                            <TableCell>Wind</TableCell>
-                                                                            <TableCell>{airport.wind}</TableCell>
-                                                                        </TableRow>
-                                                                        <TableRow>
-                                                                            <TableCell>Altimeter</TableCell>
-                                                                            <TableCell>{airport.altimeter} inHg</TableCell>
-                                                                        </TableRow>
-                                                                        <TableRow>
-                                                                            <TableCell>Temperature</TableCell>
-                                                                            <TableCell>{airport.temperature} °C</TableCell>
-                                                                        </TableRow>
-                                                                        <TableRow>
-                                                                            <TableCell>Flight Rules</TableCell>
-                                                                            <TableCell>{airport.flightRules}</TableCell>
-                                                                        </TableRow>
-                                                                        <TableRow>
-                                                                            <TableCell>Visibility</TableCell>
-                                                                            <TableCell>{airport.visibility}</TableCell>
-                                                                        </TableRow>
-                                                                    </TableBody>
-                                                                </Table>
-                                                            </div>
-                                                        </DialogHeader>
-                                                    </DialogContent>
-                                                </Dialog>
-                                            </TableCell>
-                                            <TableCell>{airport.icao}</TableCell>
-                                            <TableCell>{airport.wind}</TableCell>
-                                            <TableCell>{airport.altimeter} inHg</TableCell>
-                                            <TableCell>{airport.temperature} °C</TableCell>
-                                            {canAirports ? (
-                                                <TableCell>
-                                                    <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
-                                                        <DialogTrigger>
-                                                            <TooltipProvider>
-                                                                <Tooltip>
-                                                                    <TooltipTrigger asChild onClick={() => {
-                                                                        setSelectedAirport(airport);
-                                                                        updateForm.reset({
-                                                                            name: airport.name,
-                                                                            icao: airport.icao,
-                                                                        });
-                                                                    }}>
-                                                                        <Settings className="me-2" size={24} />
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent>
-                                                                        <p>Edit Airport</p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            </TooltipProvider>
-                                                        </DialogTrigger>
-                                                        <DialogContent className="bg-gray-700">
-                                                            <DialogHeader>
-                                                                <DialogTitle className="text-white text-xl font-normal">Update Airport</DialogTitle>
-                                                                <Form {...updateForm}>
-                                                                    <form onSubmit={updateForm.handleSubmit(onUpdateSubmit)} className="space-y-8">
-                                                                        <Row>
-                                                                            <Col lg="8">
-                                                                                <FormField
-                                                                                    control={updateForm.control}
-                                                                                    name="name"
-                                                                                    render={({ field }) => (
-                                                                                        <FormItem>
-                                                                                            <FormLabel className="text-lg text-white">Name</FormLabel>
-                                                                                            <FormControl>
-                                                                                                <Input {...field} />
-                                                                                            </FormControl>
-                                                                                            <FormMessage />
-                                                                                        </FormItem>
-                                                                                    )}
-                                                                                />
-                                                                            </Col>
-                                                                            <Col>
-                                                                                <FormField
-                                                                                    control={updateForm.control}
-                                                                                    name="icao"
-                                                                                    render={({ field }) => (
-                                                                                        <FormItem>
-                                                                                            <FormLabel className="text-lg text-white">ICAO</FormLabel>
-                                                                                            <FormControl>
-                                                                                                <Input {...field} />
-                                                                                            </FormControl>
-                                                                                            <FormMessage />
-                                                                                        </FormItem>
-                                                                                    )}
-                                                                                />
-                                                                            </Col>
-                                                                        </Row>
-                                                                        <Button type="submit" className="text-right bg-success">Submit</Button>
-                                                                    </form>
-                                                                </Form>
-                                                            </DialogHeader>
-                                                        </DialogContent>
-                                                    </Dialog>
-                                                    <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
-                                                        <DialogTrigger>
-                                                            <TooltipProvider>
-                                                                <Tooltip>
-                                                                    <TooltipTrigger asChild onClick={() => setSelectedAirport(airport)}>
-                                                                        <Trash2 size={24} />
-                                                                    </TooltipTrigger>
-                                                                    <TooltipContent>
-                                                                        <p>Delete Airport</p>
-                                                                    </TooltipContent>
-                                                                </Tooltip>
-                                                            </TooltipProvider>
-                                                        </DialogTrigger>
-                                                        <DialogContent className="bg-gray-700">
-                                                            <DialogHeader>
-                                                                <DialogTitle className="text-white text-xl font-normal">Are you sure you want to delete this airport?</DialogTitle>
-                                                                <DialogDescription className="text-md text-white">
-                                                                    <span className="text-lg">{selectedAirport.name}</span>
-                                                                </DialogDescription>
-                                                            </DialogHeader>
-                                                            <DialogFooter>
-                                                                <DialogClose asChild>
-                                                                    <Button className="bg-success" onClick={() => {
-                                                                        deleteAirport(airport.id);
-                                                                    }}>
-                                                                        Confirm
-                                                                    </Button>
-                                                                </DialogClose>
-                                                            </DialogFooter>
-                                                        </DialogContent>
-                                                    </Dialog>
-                                                </TableCell>
-                                            ) : (
-                                                <></>
-                                            )}
-                                        </TableRow>
-                                    ))}
-                                </>
+                            {airports.map((airport) => (
+                                <TableRow key={airport.id} className="text-left text-lg">
+                                    <TableCell>
+                                        <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+                                            <DialogTrigger>
+                                                {airport.name}
+                                            </DialogTrigger>
+                                            <DialogContent className="bg-gray-700">
+                                                <DialogHeader>
+                                                    <DialogTitle className="text-white text-xl font-normal">{airport.name}</DialogTitle>
+                                                    <div className="text-lg text-white">
+                                                        <div>{airport.metarRaw}</div>
+                                                        <Table>
+                                                            <TableBody className="text-lg">
+                                                                <TableRow>
+                                                                    <TableCell>Wind</TableCell>
+                                                                    <TableCell>{airport.wind}</TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>Altimeter</TableCell>
+                                                                    <TableCell>{airport.altimeter} inHg</TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>Temperature</TableCell>
+                                                                    <TableCell>{airport.temperature} °C</TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>Flight Rules</TableCell>
+                                                                    <TableCell>{airport.flightRules}</TableCell>
+                                                                </TableRow>
+                                                                <TableRow>
+                                                                    <TableCell>Visibility</TableCell>
+                                                                    <TableCell>{airport.visibility}</TableCell>
+                                                                </TableRow>
+                                                            </TableBody>
+                                                        </Table>
+                                                    </div>
+                                                </DialogHeader>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </TableCell>
+                                    <TableCell>{airport.icao}</TableCell>
+                                    <TableCell>{airport.wind}</TableCell>
+                                    <TableCell>{airport.altimeter} inHg</TableCell>
+                                    <TableCell>{airport.temperature} °C</TableCell>
+                                    {canAirports ? (
+                                        <TableCell>
+                                            <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
+                                                <DialogTrigger>
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild onClick={() => {
+                                                                setSelectedAirport(airport);
+                                                                updateForm.reset({
+                                                                    name: airport.name,
+                                                                    icao: airport.icao,
+                                                                });
+                                                            }}>
+                                                                <Settings className="me-2" size={24} />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Edit Airport</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
+                                                </DialogTrigger>
+                                                <DialogContent className="bg-gray-700">
+                                                    <DialogHeader>
+                                                        <DialogTitle className="text-white text-xl font-normal">Update Airport</DialogTitle>
+                                                        <Form {...updateForm}>
+                                                            <form onSubmit={updateForm.handleSubmit(onUpdateSubmit)} className="space-y-8">
+                                                                <Row>
+                                                                    <Col lg="8">
+                                                                        <FormField
+                                                                            control={updateForm.control}
+                                                                            name="name"
+                                                                            render={({ field }) => (
+                                                                                <FormItem>
+                                                                                    <FormLabel className="text-lg text-white">Name</FormLabel>
+                                                                                    <FormControl>
+                                                                                        <Input {...field} />
+                                                                                    </FormControl>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </Col>
+                                                                    <Col>
+                                                                        <FormField
+                                                                            control={updateForm.control}
+                                                                            name="icao"
+                                                                            render={({ field }) => (
+                                                                                <FormItem>
+                                                                                    <FormLabel className="text-lg text-white">ICAO</FormLabel>
+                                                                                    <FormControl>
+                                                                                        <Input {...field} />
+                                                                                    </FormControl>
+                                                                                    <FormMessage />
+                                                                                </FormItem>
+                                                                            )}
+                                                                        />
+                                                                    </Col>
+                                                                </Row>
+                                                                <Button type="submit" className="text-right bg-success">Submit</Button>
+                                                            </form>
+                                                        </Form>
+                                                    </DialogHeader>
+                                                </DialogContent>
+                                            </Dialog>
+                                            <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                                                <DialogTrigger>
+                                                    <TooltipProvider>
+                                                        <Tooltip>
+                                                            <TooltipTrigger asChild onClick={() => setSelectedAirport(airport)}>
+                                                                <Trash2 size={24} />
+                                                            </TooltipTrigger>
+                                                            <TooltipContent>
+                                                                <p>Delete Airport</p>
+                                                            </TooltipContent>
+                                                        </Tooltip>
+                                                    </TooltipProvider>
+                                                </DialogTrigger>
+                                                <DialogContent className="bg-gray-700">
+                                                    <DialogHeader>
+                                                        <DialogTitle className="text-white text-xl font-normal">Are you sure you want to delete this airport?</DialogTitle>
+                                                        <DialogDescription className="text-md text-white">
+                                                            <span className="text-lg">{selectedAirport.name}</span>
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <DialogFooter>
+                                                        <DialogClose asChild>
+                                                            <Button className="bg-success" onClick={() => {
+                                                                deleteAirport(airport.id);
+                                                            }}>
+                                                                Confirm
+                                                            </Button>
+                                                        </DialogClose>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
+                                        </TableCell>
+                                    ) : (
+                                        <></>
+                                    )}
+                                </TableRow>
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {loading ? (
+                                <TableRow>
+                                    <TableCell colSpan={canAirports ? 6 : 7}>
+                                        <Spinner />
+                                    </TableCell>
+                                </TableRow>
                             ) : (
                                 <TableRow>
                                     {<TableCell colSpan={canAirports ? 6 : 7} className="text-lg">
@@ -424,12 +431,6 @@ export default function Airports() {
                                 </TableRow>
                             )}
                         </>
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={4}>
-                                <Spinner />
-                            </TableCell>
-                        </TableRow>
                     )}
                 </TableBody>
             </Table>
