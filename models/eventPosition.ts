@@ -1,4 +1,4 @@
-import { Rating } from "./rating";
+import { Rating } from "./rosterUser";
 
 export type EventPosition = {
     id: number;

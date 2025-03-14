@@ -6,12 +6,14 @@ import { AuthContext, HeaderContext } from "@/app/Providers";
 import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 
 export const Navigation = () => {
 
     const auth = useContext(AuthContext);
     const image = useContext(HeaderContext);
+    const router = useRouter();
 
     const [headerImage, setheaderImage] = useState<string>("");
     const [name, setName] = useState<string>("");
@@ -26,6 +28,10 @@ export const Navigation = () => {
             const token = localStorage.getItem("accessToken");
             if (token) {
                 auth?.setUser(jwtDecode(token));
+                if (auth?.user?.exp ?? 0 < Date.now() / 1000) {
+                    auth?.logout();
+                    router.push("/auth/login");
+                }
             }
         }
         setheaderImage(image ?? "header-image-1");
@@ -35,7 +41,7 @@ export const Navigation = () => {
         setSeniorStaff(auth?.isSeniorStaff() ?? false);
         setTrainingStaff(auth?.isTrainingStaff() ?? false);
         setSeniorTrainingStaff(auth?.isSeniorTrainingStaff() ?? false);
-    }, [auth, image]);
+    }, [auth, image, router]);
 
 
     return (
@@ -74,7 +80,7 @@ export const Navigation = () => {
                                         Roster
                                     </NavDropdown.Item>
                                 </Link>
-                                <Link href="/statistics" className="text-decoration-none" passHref>
+                                <Link href={`/statistics?month=${new Date().getMonth() + 1}&year=${new Date().getFullYear()}`} className="text-decoration-none" passHref>
                                     <NavDropdown.Item as="span">
                                         Statistics
                                     </NavDropdown.Item>
