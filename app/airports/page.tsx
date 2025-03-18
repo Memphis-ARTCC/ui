@@ -89,7 +89,7 @@ export default function Airports() {
     });
 
     async function onCreateSubmit(values: z.infer<typeof createFormSchema>) {
-        await fetch(`${process.env.API_URL}/airports`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -98,7 +98,8 @@ export default function Airports() {
             body: JSON.stringify(values),
         }).then(async (response) => {
             if (!response.ok) {
-                toast.error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                toast.error(`Error creating airport:\n${error.message}`);
                 return;
             }
             const data = await response.json() as unknown as Response<Airport>;
@@ -107,14 +108,14 @@ export default function Airports() {
             createForm.reset();
             toast.success("Airport created successfully");
         }).catch((error) => {
-            console.log(`Error creating airport:\n${error}`);
-            toast.error(`Error creating airport: ${error}`);
+            console.log(error);
+            toast.error(error);
             return;
         });
     }
 
     async function onUpdateSubmit(values: z.infer<typeof updateFormSchema>) {
-        await fetch(`${process.env.API_URL}/airports/${selectedAirport.id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports/${selectedAirport.id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -123,7 +124,8 @@ export default function Airports() {
             body: JSON.stringify(values),
         }).then(async (response) => {
             if (!response.ok) {
-                toast.error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                toast.error(`Error updating airport:\n${error.message}`);
                 return;
             }
             const data = await response.json() as unknown as Response<Airport>;
@@ -132,29 +134,30 @@ export default function Airports() {
             updateForm.reset();
             toast.success("Airport updated successfully");
         }).catch((error) => {
-            console.log(`Error creating airport:\n${error}`);
-            toast.error(`Error creating airport: ${error}`);
+            console.log(error);
+            toast.error(error);
             return;
         });
     }
 
     async function deleteAirport(id: number) {
-        await fetch(`${process.env.API_URL}/airports/${id}`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
-        }).then((response) => {
+        }).then(async (response) => {
             if (!response.ok) {
-                toast.error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                toast.error(`Error deleting airport:\n${error.message}`);
                 return;
             }
             setAirports(airports.filter((airport) => airport.id !== id));
             toast.success("Airport deleted successfully");
         }).catch((error) => {
-            console.log(`Error deleting airport:\n${error}`);
-            toast.error(`Error deleting airport: ${error}`);
+            console.log(error);
+            toast.error(error);
             return;
         });
     }
@@ -162,9 +165,10 @@ export default function Airports() {
     useEffect(() => {
         document.title = "Airports | Memphis ARTCC";
         const fetchAirports = async () => {
-            const response = await fetch(`${process.env.API_URL}/airports`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports`);
             if (!response.ok) {
-                throw new Error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching airports:\n${error.message}`);
             }
             return await response.json() as Response<Airport[]>;
         };
@@ -175,8 +179,8 @@ export default function Airports() {
                 setLoading(false);
             })
             .catch((error) => {
-                console.log(`Error fetching airports:\n${error}`);
-                toast.error("Error fetching airports");
+                console.log(error);
+                toast.error(error);
                 setLoading(false);
             });
         setCanAirports(authContext?.hasRoles(CAN_AIRPORTS) ?? false);

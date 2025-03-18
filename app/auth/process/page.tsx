@@ -29,7 +29,7 @@ export default function Login() {
 
         const fetchToken = async () => {
             console.log("Fetching token...");
-            const response = await fetch(`${process.env.API_URL}/auth/callback`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/callback`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
