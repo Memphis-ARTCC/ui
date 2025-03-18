@@ -3,6 +3,10 @@
 @import "~bootstrap/scss/mixins";
 @import "~bootstrap";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .header-image-1 {
     background-size: cover;
     background-repeat: no-repeat;

@@ -1,7 +1,5 @@
 import { Ubuntu } from "next/font/google";
 import "./globals.scss";
-import "./tailwind.css";
-import "react-toastify/dist/ReactToastify.min.css";
 import { Suspense } from "react";
 import Providers from "./Providers";
 import { Navigation } from "@/components/Navigation";
