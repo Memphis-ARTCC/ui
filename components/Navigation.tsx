@@ -51,7 +51,7 @@ export const Navigation = () => {
                 <Container>
                     <Link href="/" className="flex mr-5" passHref>
                         <Navbar.Brand className="align-middle" as="span">
-                            <Image src={`${process.env.S3_URL}/images/zme_logo.png`} alt="Memphis ARTCC" width={100} height={100} />
+                            <Image src={`${process.env.NEXT_PUBLIC_S3_URL}/images/zme_logo.png`} alt="Memphis ARTCC" width={100} height={100} />
                         </Navbar.Brand>
                     </Link>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />

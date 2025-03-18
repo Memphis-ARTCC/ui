@@ -1,5 +1,5 @@
 "use client";
-
+import { Response } from "@/models/response";
 import { OnlineController } from "@/models/onlineController";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
@@ -14,17 +14,19 @@ const Sideabr = () => {
 
     useEffect(() => {
         const fetchOnlineControllers = async () => {
-            const response = await fetch(`${process.env.API_URL}/onlinecontrollers`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/onlinecontrollers`);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching online controllers:\n${error.message}`);
             }
             return await response.json() as OnlineController[];
         };
 
         const fetchEvents = async () => {
-            const response = await fetch(`${process.env.API_URL}/events`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching events:\n${error.message}`);
             }
             return await response.json() as Event[];
         };
@@ -98,7 +100,6 @@ const Sideabr = () => {
                         <div className="bg-gray-700 rounded-2xl shadow-md p-3">
                             {events.map((event, index) => (
                                 <div key={event.id} className={index == events.length - 1 ? "" : "mb-4"}>
-                                    
                                 </div>
                             ))}
                         </div>

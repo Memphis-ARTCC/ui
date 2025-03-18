@@ -56,7 +56,7 @@ export default function Roster() {
     useEffect(() => {
         document.title = "Roster | Memphis ARTCC";
         const fetchRoster = async () => {
-            const response = await fetch(`${process.env.API_URL}/users/roster`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/roster`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
@@ -64,7 +64,8 @@ export default function Roster() {
             }
             );
             if (!response.ok) {
-                throw new Error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching roster:\n${error.message}`);
             }
             return await response.json() as Response<RosterUser[]>;
         };
@@ -75,8 +76,8 @@ export default function Roster() {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.log(`Error fetching roster:\n${error}`);
-                    toast.error("Error fetching roster");
+                    console.log(error);
+                    toast.error(error);
                     setLoading(false);
                 });
         }

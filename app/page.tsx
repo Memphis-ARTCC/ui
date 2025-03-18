@@ -28,14 +28,15 @@ export default function Home() {
             setIsMember(auth.user.isMember);
         }
         const fetchTopControllers = async () => {
-            const response = await fetch(`${process.env.API_URL}/stats/top`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stats/top`, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             }
             );
             if (!response.ok) {
-                throw new Error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching top controllers:\n${error.message}`);
             }
             return await response.json() as Response<Stats[]>;
         };
@@ -45,8 +46,8 @@ export default function Home() {
                 setLoadingTop(false);
             })
             .catch((error) => {
-                console.log(`Error fetching top controllers:\n${error}`);
-                toast.error("Error fetching top controllers");
+                console.log(error);
+                toast.error(error);
                 setLoadingTop(false);
             });
     }, [auth]);

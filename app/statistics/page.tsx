@@ -40,14 +40,15 @@ export default function StaffingRequest() {
     useEffect(() => {
         document.title = "Statistics | Memphis ARTCC";
         const fetchStats = async () => {
-            const response = await fetch(`${process.env.API_URL}/stats?month=${month}&year=${year}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stats?month=${month}&year=${year}`, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
                 },
             });
             if (!response.ok) {
-                throw new Error(`HTTP error!\nstatus: ${response.status}\nerror: ${response.statusText}`);
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching statistics:\n${error.message}`);
             }
             return await response.json() as Response<Stats[]>;
         };
@@ -58,8 +59,8 @@ export default function StaffingRequest() {
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.log(`Error fetching roster:\n${error}`);
-                    toast.error("Error fetching roster");
+                    console.log(error);
+                    toast.error(error);
                     setLoading(false);
                 });
         }

@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export default function Login() {
 
     useEffect(() => {
-        window.location.href = `${process.env.AUTH_REDIRECT}`;
+        window.location.href = `${process.env.NEXT_PUBLIC_AUTH_REDIRECT}`;
     }, []);
 
     return (

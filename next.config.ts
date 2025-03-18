@@ -2,11 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     output: "standalone",
-    env: {
-        API_URL: process.env.API_URL,
-        S3_URL: process.env.S3_URL,
-        AUTH_REDIRECT: process.env.AUTH_REDIRECT,
-    },
     images: {
         remotePatterns: [
             {
