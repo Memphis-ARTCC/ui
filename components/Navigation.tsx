@@ -1,12 +1,12 @@
 "use client";
 
-import { jwtDecode } from "jwt-decode";
-import { useContext, useEffect, useState } from "react";
 import { AuthContext, HeaderContext } from "@/app/Providers";
-import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import Link from "next/link";
+import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 
 
 export const Navigation = () => {
@@ -46,10 +46,10 @@ export const Navigation = () => {
 
     return (
         <>
-            <div className={`min-h-[190px] max-h-[190px] w-full ${headerImage}`}></div>
+            <div className={`max-h-[190px] min-h-[190px] w-full ${headerImage}`}></div>
             <Navbar collapseOnSelect expand="lg" className="mb-8 bg-gray-700">
                 <Container>
-                    <Link href="/" className="flex mr-5" passHref>
+                    <Link href="/" className="mr-5 flex" passHref>
                         <Navbar.Brand className="align-middle" as="span">
                             <Image src={`${process.env.NEXT_PUBLIC_S3_URL}/images/zme_logo.png`} alt="Memphis ARTCC" width={100} height={100} />
                         </Navbar.Brand>
@@ -57,7 +57,7 @@ export const Navigation = () => {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <NavDropdown title="Pilots" id="pilots-nav" className="mx-2 transition-all ease-in-out delay-150">
+                            <NavDropdown title="Pilots" id="pilots-nav" className="mx-2 transition-all delay-150 ease-in-out">
                                 <Link href="/airports" className="text-decoration-none" passHref>
                                     <NavDropdown.Item as="span">
                                         Airports

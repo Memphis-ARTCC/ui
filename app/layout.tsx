@@ -1,18 +1,21 @@
-import { Ubuntu } from "next/font/google";
 import "./globals.scss";
-import { Suspense } from "react";
-import Providers from "./Providers";
+
 import { Navigation } from "@/components/Navigation";
-import { Col, Container, Row } from "react-bootstrap";
 import Sidebar from "@/components/Sidebar";
+import { Ubuntu } from "next/font/google";
+import { Suspense } from "react";
+import { Col, Container, Row } from "react-bootstrap";
 import { ToastContainer } from "react-toastify";
+
+import Providers from "./Providers";
+
 
 const ubuntu = Ubuntu({ weight: "400", subsets: ["latin"] });
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body className={`${ubuntu.className} flex flex-col h-screen bg-zinc-900`}>
+            <body className={`${ubuntu.className} flex h-screen flex-col bg-zinc-900`}>
                 <Providers>
                     <Suspense>
                         <Navigation />

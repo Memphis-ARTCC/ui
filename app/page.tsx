@@ -1,14 +1,14 @@
 "use client";
 
-import { Trophy } from "lucide-react";
 import { Token } from "@/models/auth/token";
-import { Stats } from "@/models/stats";
 import { Response } from "@/models/response";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "./Providers";
+import { Stats } from "@/models/stats";
+import { Trophy } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { AuthContext } from "./Providers";
 
 export default function Home() {
     const auth = useContext(AuthContext);
@@ -53,8 +53,8 @@ export default function Home() {
     }, [auth]);
 
     return (
-        <div className="text-white w-100 text-center">
-            <div className="text-3xl text-center">
+        <div className="w-100 text-center text-white">
+            <div className="text-center text-3xl">
                 Virtual Memphis ARTCC
             </div>
             <div className="mx-4">
@@ -70,7 +70,7 @@ export default function Home() {
                         <div className="flex flex-col items-center">
                             If you would like to become a visitor, please click the button below.
                             <br />
-                            <button className="w-auto p-2 mt-4 text-center transition-all rounded-md shadow-md bg-sky-800 hover:bg-sky-700"
+                            <button className="mt-4 w-auto rounded-md bg-sky-800 p-2 text-center shadow-md transition-all hover:bg-sky-700"
                                 onClick={() => router.push("/visit")}>
                                 Become a Visitor
                             </button>
@@ -78,20 +78,20 @@ export default function Home() {
                     ) : <></>}
                 </div>
             </div>
-            <div className="text-3xl text-center mb-4">
+            <div className="mb-4 text-center text-3xl">
                 News
             </div>
-            <div className="bg-gray-700 rounded-2xl shadow-md p-3">
+            <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                 Testing
             </div>
-            <div className="text-3xl text-center my-4">
+            <div className="my-4 text-center text-3xl">
                 Top Controllers
             </div>
-            <div className="bg-gray-700 rounded-2xl shadow-md p-3">
+            <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                 {top.length > 0 ? (
-                    <div className="flex items-end justify-center gap-8 mt-10">
-                        <div className="flex flex-col items-center w-32 h-24">
-                            <Trophy className="w-8 h-8 text-gray-400 mb-1" />
+                    <div className="mt-10 flex items-end justify-center gap-8">
+                        <div className="flex h-24 w-32 flex-col items-center">
+                            <Trophy className="mb-1 size-8 text-gray-400" />
                             {top[1] ? (
                                 <>
                                     <span className="text-lg">{top[1].firstName} {top[1].lastName}</span>
@@ -101,8 +101,8 @@ export default function Home() {
                                 <span>-</span>
                             )}
                         </div>
-                        <div className="flex flex-col items-center w-40 h-28">
-                            <Trophy className="w-10 h-10 text-yellow-500 mb-1" />
+                        <div className="flex h-28 w-40 flex-col items-center">
+                            <Trophy className="mb-1 size-10 text-yellow-500" />
                             {top[0] ? (
                                 <>
                                     <span className="text-lg">{top[0].firstName} {top[0].lastName}</span>
@@ -112,8 +112,8 @@ export default function Home() {
                                 <span>-</span>
                             )}
                         </div>
-                        <div className="flex flex-col items-center w-32 h-24">
-                            <Trophy className="w-8 h-8 text-orange-600 mb-1" />
+                        <div className="flex h-24 w-32 flex-col items-center">
+                            <Trophy className="mb-1 size-8 text-orange-600" />
                             {top[2] ? (
                                 <>
                                     <span className="text-lg">{top[2].firstName} {top[2].lastName}</span>

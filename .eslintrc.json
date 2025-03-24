@@ -1,7 +1,11 @@
 {
     "extends": [
         "next/core-web-vitals",
-        "next/typescript"
+        "next/typescript",
+        "plugin:tailwindcss/recommended"
+    ],
+    "plugins": [
+        "perfectionist"
     ],
     "rules": {
         "indent": [
@@ -15,6 +19,14 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "perfectionist/sort-imports": [
+            "error",
+            {
+                "type": "natural",
+                "order": "asc"
+            }
+        ],
+        "tailwindcss/no-custom-classname": "off"
     }
 }
