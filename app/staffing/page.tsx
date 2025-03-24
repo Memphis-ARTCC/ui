@@ -1,11 +1,14 @@
 "use client";
 
 import AuthRoute from "@/components/AuthRoute";
+import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Response } from "@/models/response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Row, Col, FormLabel, FormControl, Button, Spinner } from "react-bootstrap";
+import { Form, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
@@ -83,7 +86,126 @@ export default function StaffingRequest() {
                     </div>
                 </div>
                 <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
-                    testing
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <Row>
+                                <Col lg="8">
+                                    <FormField
+                                        control={form.control}
+                                        name="cid"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">CID</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="fullName"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Name</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Email</FormLabel>
+                                                <FormControl>
+                                                    <Input disabled {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="organization"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Organization</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="estimatedPilots"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Organization</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="start"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Start Date & Time</FormLabel>
+                                                <FormControl>
+                                                    <Input type="date" {...field} value={field.value.toISOString().split("T")[0]} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
+                                        name="duration"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Duration</FormLabel>
+                                                <FormControl>
+                                                    <Input type="number" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                            </Row>
+                            {!loading ? (
+                                <Button type="submit" className="bg-success text-right">Submit</Button>
+                            ) : (
+                                <Button type="submit" className="bg-success text-right" disabled>
+                                    <Spinner />
+                                </Button>
+                            )}
+                        </form>
+                    </Form>
                 </div>
             </div>
         </AuthRoute>
