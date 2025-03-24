@@ -1,13 +1,7 @@
 "use client";
 
 import AuthRoute from "@/components/AuthRoute";
-import { RosterUser } from "@/models/rosterUser";
-import { Response } from "@/models/response";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { AuthContext } from "../Providers";
-import { CAN_ROSTER } from "@/utils/constants";
-import { getRatingString, getShortRatingString, getUserStatusString } from "@/utils/enums";
+import Spinner from "@/components/Spinner";
 import {
     Table,
     TableBody,
@@ -16,10 +10,18 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Link from "next/link";
-import { Check } from "lucide-react";
-import Spinner from "@/components/Spinner";
 import { Certification } from "@/models/certification";
+import { Response } from "@/models/response";
+import { RosterUser } from "@/models/rosterUser";
+import { CAN_ROSTER } from "@/utils/constants";
+import { getRatingString, getShortRatingString, getUserStatusString } from "@/utils/enums";
+import { Check } from "lucide-react";
+import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+import { AuthContext } from "../Providers";
+
 
 type CertificationProps = {
     certification: Certification;
@@ -29,7 +31,7 @@ const Certifiation = ({ certification }: CertificationProps) => {
     return (
         <>
             {certification.solo ? (
-                <TableCell className="text-yellow-500 text-lg">
+                <TableCell className="text-lg text-yellow-500">
                     S
                 </TableCell>
             ) : (
@@ -86,22 +88,22 @@ export default function Roster() {
 
     return (
         <AuthRoute>
-            <div className="text-white w-100 text-center">
+            <div className="w-100 text-center text-white">
                 <div className="flex flex-row justify-center">
-                    <div className="text-3xl text-center mb-4">
+                    <div className="mb-4 text-center text-3xl">
                         Roster
                     </div>
                 </div>
-                <div className="bg-gray-700 rounded-2xl shadow-md p-3">
-                    <Table className="bg-gray-700 rounded-2xl shadow-md p-3">
+                <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
+                    <Table className="rounded-2xl bg-gray-700 p-3 shadow-md">
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="text-white text-lg text-nowrap">Name</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Status</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Ground</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Tower</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Tier 2 Tracon</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Center</TableHead>
+                                <TableHead className="text-nowrap text-lg text-white">Name</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Status</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Tier 2 Ground</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Tier 2 Tower</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Tier 2 Tracon</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Center</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -109,7 +111,7 @@ export default function Roster() {
                                 <>
                                     {roster.map((user) => (
                                         <TableRow key={user.cid} className="h-full">
-                                            <TableCell className="text-left min-w-[300px]">
+                                            <TableCell className="min-w-[300px] text-left">
                                                 <div className="flex flex-col">
                                                     <div className="text-xl">
                                                         {canRoster ? (

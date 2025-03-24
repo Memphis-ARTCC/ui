@@ -1,26 +1,7 @@
 "use client";
 
-import { Airport } from "@/models/airport";
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../Providers";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "react-toastify";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
+import Spinner from "@/components/Spinner";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogClose,
@@ -40,12 +21,32 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Col, Row } from "react-bootstrap";
-import Spinner from "@/components/Spinner";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Airport } from "@/models/airport";
 import { Response } from "@/models/response";
 import { CAN_AIRPORTS } from "@/utils/constants";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, Settings, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useContext, useEffect, useState } from "react";
+import { Col, Row } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { z } from "zod";
+
+import { AuthContext } from "../Providers";
 
 const createFormSchema = z.object({
     name: z.string().min(1),
@@ -89,6 +90,7 @@ export default function Airports() {
     });
 
     async function onCreateSubmit(values: z.infer<typeof createFormSchema>) {
+        setLoading(true);
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports`, {
             method: "POST",
             headers: {
@@ -100,6 +102,7 @@ export default function Airports() {
             if (!response.ok) {
                 const error = await response.json() as Response<string>;
                 toast.error(`Error creating airport:\n${error.message}`);
+                setLoading(false);
                 return;
             }
             const data = await response.json() as unknown as Response<Airport>;
@@ -107,14 +110,17 @@ export default function Airports() {
             setCreateOpen(false);
             createForm.reset();
             toast.success("Airport created successfully");
+            setLoading(false);
         }).catch((error) => {
             console.log(error);
             toast.error(error);
+            setLoading(false);
             return;
         });
     }
 
     async function onUpdateSubmit(values: z.infer<typeof updateFormSchema>) {
+        setLoading(true);
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports/${selectedAirport.id}`, {
             method: "PUT",
             headers: {
@@ -126,6 +132,7 @@ export default function Airports() {
             if (!response.ok) {
                 const error = await response.json() as Response<string>;
                 toast.error(`Error updating airport:\n${error.message}`);
+                setLoading(false);
                 return;
             }
             const data = await response.json() as unknown as Response<Airport>;
@@ -133,14 +140,17 @@ export default function Airports() {
             setUpdateOpen(false);
             updateForm.reset();
             toast.success("Airport updated successfully");
+            setLoading(false);
         }).catch((error) => {
             console.log(error);
             toast.error(error);
+            setLoading(false);
             return;
         });
     }
 
     async function deleteAirport(id: number) {
+        setLoading(true);
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports/${id}`, {
             method: "DELETE",
             headers: {
@@ -151,13 +161,16 @@ export default function Airports() {
             if (!response.ok) {
                 const error = await response.json() as Response<string>;
                 toast.error(`Error deleting airport:\n${error.message}`);
+                setLoading(false);
                 return;
             }
             setAirports(airports.filter((airport) => airport.id !== id));
             toast.success("Airport deleted successfully");
+            setLoading(false);
         }).catch((error) => {
             console.log(error);
             toast.error(error);
+            setLoading(false);
             return;
         });
     }
@@ -187,13 +200,13 @@ export default function Airports() {
     }, [authContext]);
 
     return (
-        <div className="text-white w-100 text-center">
+        <div className="w-100 text-center text-white">
             <div className="flex flex-row justify-center">
-                <div className="text-3xl text-center mb-4">
+                <div className="mb-4 text-center text-3xl">
                     Airports
                 </div>
                 {canAirports ? (
-                    <div className="text-lg text-white ms-2 mt-2">
+                    <div className="ms-2 mt-2 text-lg text-white">
                         <Dialog open={createOpen} onOpenChange={setCreateOpen}>
                             <DialogTrigger>
                                 <TooltipProvider>
@@ -209,7 +222,7 @@ export default function Airports() {
                             </DialogTrigger>
                             <DialogContent className="bg-gray-700">
                                 <DialogHeader>
-                                    <DialogTitle className="text-white text-xl font-normal">New Airport</DialogTitle>
+                                    <DialogTitle className="text-xl font-normal text-white">New Airport</DialogTitle>
                                     <Form {...createForm}>
                                         <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-8">
                                             <Row>
@@ -244,7 +257,13 @@ export default function Airports() {
                                                     />
                                                 </Col>
                                             </Row>
-                                            <Button type="submit" className="text-right bg-success">Submit</Button>
+                                            {!loading ? (
+                                                <Button type="submit" className="bg-success text-right">Submit</Button>
+                                            ) : (
+                                                <Button type="submit" className="bg-success text-right" disabled>
+                                                    <Spinner />
+                                                </Button>
+                                            )}
                                         </form>
                                     </Form>
                                 </DialogHeader>
@@ -254,7 +273,7 @@ export default function Airports() {
                 ) : <></>}
             </div>
 
-            <Table className="bg-gray-700 rounded-2xl shadow-md p-3">
+            <Table className="rounded-2xl bg-gray-700 p-3 shadow-md">
                 <TableHeader>
                     <TableRow>
                         <TableHead className="text-white">Name</TableHead>
@@ -281,7 +300,7 @@ export default function Airports() {
                                             </DialogTrigger>
                                             <DialogContent className="bg-gray-700">
                                                 <DialogHeader>
-                                                    <DialogTitle className="text-white text-xl font-normal">{airport.name}</DialogTitle>
+                                                    <DialogTitle className="text-xl font-normal text-white">{airport.name}</DialogTitle>
                                                     <div className="text-lg text-white">
                                                         <div>{airport.metarRaw}</div>
                                                         <Table>
@@ -340,7 +359,7 @@ export default function Airports() {
                                                 </DialogTrigger>
                                                 <DialogContent className="bg-gray-700">
                                                     <DialogHeader>
-                                                        <DialogTitle className="text-white text-xl font-normal">Update Airport</DialogTitle>
+                                                        <DialogTitle className="text-xl font-normal text-white">Update Airport</DialogTitle>
                                                         <Form {...updateForm}>
                                                             <form onSubmit={updateForm.handleSubmit(onUpdateSubmit)} className="space-y-8">
                                                                 <Row>
@@ -375,7 +394,13 @@ export default function Airports() {
                                                                         />
                                                                     </Col>
                                                                 </Row>
-                                                                <Button type="submit" className="text-right bg-success">Submit</Button>
+                                                                {!loading ? (
+                                                                    <Button type="submit" className="bg-success text-right">Submit</Button>
+                                                                ) : (
+                                                                    <Button type="submit" className="bg-success text-right" disabled>
+                                                                        <Spinner />
+                                                                    </Button>
+                                                                )}
                                                             </form>
                                                         </Form>
                                                     </DialogHeader>
@@ -396,7 +421,7 @@ export default function Airports() {
                                                 </DialogTrigger>
                                                 <DialogContent className="bg-gray-700">
                                                     <DialogHeader>
-                                                        <DialogTitle className="text-white text-xl font-normal">Are you sure you want to delete this airport?</DialogTitle>
+                                                        <DialogTitle className="text-xl font-normal text-white">Are you sure you want to delete this airport?</DialogTitle>
                                                         <DialogDescription className="text-md text-white">
                                                             <span className="text-lg">{selectedAirport.name}</span>
                                                         </DialogDescription>

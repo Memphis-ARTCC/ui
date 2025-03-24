@@ -1,12 +1,7 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import AuthRoute from "@/components/AuthRoute";
-import { Stats } from "@/models/stats";
-import { Response } from "@/models/response";
-import { useContext, useEffect, useState } from "react";
 import Spinner from "@/components/Spinner";
-import { getUserStatusString } from "@/utils/enums";
 import {
     Table,
     TableBody,
@@ -21,9 +16,15 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "react-toastify";
-import { AuthContext } from "../Providers";
+import { Response } from "@/models/response";
+import { Stats } from "@/models/stats";
+import { getUserStatusString } from "@/utils/enums";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
+import { AuthContext } from "../Providers";
 
 export default function StaffingRequest() {
 
@@ -90,26 +91,26 @@ export default function StaffingRequest() {
 
     return (
         <AuthRoute>
-            <div className="text-white w-100 text-center">
-                <div className="flex items-center justify-center mb-4">
+            <div className="w-100 text-center text-white">
+                <div className="mb-4 flex items-center justify-center">
                     <div className="flex items-center gap-6">
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <ChevronLeft className="w-8 h-8 text-white cursor-pointer hover:text-gray-400 transition" onClick={previousMonth} />
+                                    <ChevronLeft className="size-8 cursor-pointer text-white transition hover:text-gray-400" onClick={previousMonth} />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Previous Month</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
-                        <div className="text-3xl text-center text-white">
+                        <div className="text-center text-3xl text-white">
                             Statistics
                         </div>
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <ChevronRight className="w-8 h-8 text-white cursor-pointer hover:text-gray-400 transition" onClick={nextMonth} />
+                                    <ChevronRight className="size-8 cursor-pointer text-white transition hover:text-gray-400" onClick={nextMonth} />
                                 </TooltipTrigger>
                                 <TooltipContent>
                                     <p>Next Month</p>
@@ -118,23 +119,23 @@ export default function StaffingRequest() {
                         </TooltipProvider>
                     </div>
                 </div>
-                <div className="bg-gray-700 rounded-2xl shadow-md p-3">
-                    <Table className="bg-gray-700 rounded-2xl shadow-md p-3">
+                <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
+                    <Table className="rounded-2xl bg-gray-700 p-3 shadow-md">
                         <TableHeader>
                             <TableRow>
-                                <TableHead colSpan={8} className="text-white text-3xl text-center">
+                                <TableHead colSpan={8} className="text-center text-3xl text-white">
                                     {new Date(year, month - 1).toLocaleString("default", { month: "long" })} {year}
                                 </TableHead>
                             </TableRow>
                             <TableRow>
-                                <TableHead className="text-white text-lg text-nowrap">Name</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Status</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Delivery</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Ground</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Tower</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Tracon</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Center</TableHead>
-                                <TableHead className="text-white text-center text-lg text-nowrap">Total</TableHead>
+                                <TableHead className="text-nowrap text-lg text-white">Name</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Status</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Delivery</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Ground</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Tower</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Tracon</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Center</TableHead>
+                                <TableHead className="text-nowrap text-center text-lg text-white">Total</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -142,7 +143,7 @@ export default function StaffingRequest() {
                                 <>
                                     {stats.map((statsEntry) => (
                                         <TableRow key={statsEntry.cid} className="h-full">
-                                            <TableCell className="text-left text-lg text-nowrap">
+                                            <TableCell className="text-nowrap text-left text-lg">
                                                 <span className="font-bold">{statsEntry.firstName} {statsEntry.lastName}</span>
                                             </TableCell>
                                             <TableCell className="text-lg">

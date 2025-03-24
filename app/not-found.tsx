@@ -11,13 +11,13 @@ export default function NotFound() {
     };
 
     return (
-        <div className="rounded-md shadow-sm dark:text-white w-100 ">
-            <div className="pt-2 m-5">
-                <h2 className="pb-4 mt-3 text-2xl text-center text-white">
+        <div className="w-100 rounded-md shadow-sm dark:text-white ">
+            <div className="m-5 pt-2">
+                <h2 className="mt-3 pb-4 text-center text-2xl text-white">
                     404 - Page Not Found
                 </h2>
                 <div className="flex flex-col items-center py-4 text-lg">
-                    <button className="w-24 p-2 text-center transition-all rounded-md shadow-md bg-sky-800 hover:bg-sky-700 text-white"
+                    <button className="w-24 rounded-md bg-sky-800 p-2 text-center text-white shadow-md transition-all hover:bg-sky-700"
                         onClick={goBack}>
                         Go Back
                     </button>

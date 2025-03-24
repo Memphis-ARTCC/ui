@@ -4,6 +4,7 @@ import { AuthContext } from "@/app/Providers";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
 import { Button } from "./ui/button";
 
 type AuthRouteProps = {
@@ -34,8 +35,8 @@ const AuthRoute = ({children, roles}: AuthRouteProps) => {
     return <>
         {auth ? children :
             <>
-                <div className="bg-gray-700 rounded-2xl shadow-md p-3">
-                    <div className="text-2xl mb-4 text-white text-center">
+                <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
+                    <div className="mb-4 text-center text-2xl text-white">
                         Please login with VATSIM to view this page.
                     </div>
                     <div className="flex flex-col items-center justify-center">

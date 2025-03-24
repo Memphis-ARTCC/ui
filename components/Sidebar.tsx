@@ -1,9 +1,10 @@
 "use client";
-import { Response } from "@/models/response";
-import { OnlineController } from "@/models/onlineController";
-import { useEffect, useState } from "react";
-import Spinner from "./Spinner";
 import { Event } from "@/models/event";
+import { OnlineController } from "@/models/onlineController";
+import { Response } from "@/models/response";
+import { useEffect, useState } from "react";
+
+import Spinner from "./Spinner";
 
 const Sideabr = () => {
 
@@ -19,7 +20,7 @@ const Sideabr = () => {
                 const error = await response.json() as Response<string>;
                 throw new Error(`Error fetching online controllers:\n${error.message}`);
             }
-            return await response.json() as OnlineController[];
+            return await response.json() as Response<OnlineController[]>;
         };
 
         const fetchEvents = async () => {
@@ -28,12 +29,13 @@ const Sideabr = () => {
                 const error = await response.json() as Response<string>;
                 throw new Error(`Error fetching events:\n${error.message}`);
             }
-            return await response.json() as Event[];
+            return await response.json() as Response<Event[]>;
         };
 
         fetchOnlineControllers()
             .then((response) => {
-                setOnlineControllers(response);
+                console.log(response);
+                setOnlineControllers(response.data);
             })
             .catch((error) => {
                 console.log(`Error fetching online controllers:\n${error}`);
@@ -41,7 +43,7 @@ const Sideabr = () => {
 
         fetchEvents()
             .then((response) => {
-                setEvents(response);
+                setEvents(response.data);
             })
             .catch((error) => {
                 console.log(`Error fetching events:\n${error}`);
@@ -53,58 +55,48 @@ const Sideabr = () => {
     return (
         <>
             <div className="flex flex-row justify-center">
-                <div className="w-[80%] mb-8">
-                    <div className="text-white text-center text-2xl mb-4">
+                <div className="mb-8 w-4/5">
+                    <div className="mb-4 text-center text-2xl text-white">
                         Online Controllers
                     </div>
                     {!loading ? (
                         <>
                             {onlineControllers.length > 0 ? (
-                                <div className="bg-gray-700 rounded-2xl shadow-md p-3">
+                                <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                                     {onlineControllers.map((controller, index) => (
-                                        <div key={controller.cid} className={index == onlineControllers.length - 1 ? "" : "mb-4"}>
-                                            <div className="flex flex-row justify-between w-full">
-                                                <div className="flex flex-col justify-start">
-                                                    <div className="bg-sky-800 py-2 px-4 rounded-full text-white">
-                                                        {controller.callsign}
-                                                    </div>
-                                                    <div className="text-white ms-4 mt-2 text-lg">
-                                                        {controller.frequency}
-                                                    </div>
-                                                </div>
-                                                <div className="flex flex-col justify-end">
-                                                    <div className="text-white align-top h-full mt-2 text-right text-lg">
-                                                        {controller.name}
-                                                    </div>
-                                                    <div className="text-white text-right text-lg">
-                                                        {controller.time}
-                                                    </div>
-                                                </div>
+                                        <div key={index} className="mb-2 flex items-center justify-between p-2 text-base text-white">
+                                            <div className="flex items-center gap-2">
+                                                <span className="rounded-full bg-blue-600 px-3 py-1 text-sm font-semibold text-white">
+                                                    {controller.callsign}
+                                                </span>
+                                                <span className="text-white">{controller.name}</span>
                                             </div>
+                                            <div className="mx-2 h-0.5 flex-1 bg-gray-500"></div>
+                                            <span className="text-white">{controller.frequency}</span>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-white text-center text-lg mt-4 bg-gray-700 rounded-2xl shadow-md p-3">No controllers online</div>
+                                <div className="mt-4 rounded-2xl bg-gray-700 p-3 text-center text-lg text-white shadow-md">No controllers online</div>
                             )}
                         </>
                     ) : <Spinner />}
                 </div>
             </div>
-            <div className="text-white text-center text-2xl mb-4">
+            <div className="mb-4 text-center text-2xl text-white">
                     Upcoming Events
             </div>
             {!loading ? (
                 <>
                     {events.length > 0 ? (
-                        <div className="bg-gray-700 rounded-2xl shadow-md p-3">
+                        <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                             {events.map((event, index) => (
                                 <div key={event.id} className={index == events.length - 1 ? "" : "mb-4"}>
                                 </div>
                             ))}
                         </div>
                     ) : (
-                        <div className="text-white text-center text-lg mt-4 bg-gray-700 rounded-2xl shadow-md p-3">No upcoming events</div>
+                        <div className="mt-4 rounded-2xl bg-gray-700 p-3 text-center text-lg text-white shadow-md">No upcoming events</div>
                     )}
                 </>
             ) : <Spinner />}

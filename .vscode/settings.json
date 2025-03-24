@@ -8,5 +8,6 @@
         "javascript",
         "typescript",
         "typescriptreact",
-    ]
+    ],
+    "eslint.useFlatConfig": false
 }
