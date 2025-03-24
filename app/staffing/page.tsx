@@ -5,7 +5,7 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Response } from "@/models/response";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { Row, Col, FormLabel, FormControl, Button, Spinner } from "react-bootstrap";
 import { Form, useForm } from "react-hook-form";
