@@ -1,5 +1,6 @@
 import "./globals.scss";
 
+import "react-datepicker/dist/react-datepicker.css";
 import { Navigation } from "@/components/Navigation";
 import Sidebar from "@/components/Sidebar";
 import { Ubuntu } from "next/font/google";
