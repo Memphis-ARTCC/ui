@@ -1,33 +1,48 @@
 "use client";
 
 import AuthRoute from "@/components/AuthRoute";
-import { FormField, FormItem, FormMessage } from "@/components/ui/form";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Response } from "@/models/response";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { Row, Col, FormLabel, FormControl, Button, Spinner } from "react-bootstrap";
-import { Form, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { Row, Col, Button, Spinner } from "react-bootstrap";
+import DatePicker from "react-datepicker";
+import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
-import { AuthContext } from "../Providers";
-
 
 const formSchema = z.object({
-    cid: z.number().positive(),
-    fullName: z.string().nonempty(),
-    email: z.string().email(),
     organization: z.string().nonempty(),
     estimatedPilots: z.number().positive(),
     start: z.date(),
     duration: z.string().nonempty(),
 });
 
+const generateDurationOptions = () => {
+    const options = [];
+    for (let hours = 1; hours <= 12; hours++) {
+        for (const minutes of [0, 30]) {
+            const formattedHours = String(hours).padStart(2, "0");
+            const formattedMinutes = String(minutes).padStart(2, "0");
+            options.push(`${formattedHours}:${formattedMinutes}`);
+        }
+    }
+    return options;
+};
+
 export default function StaffingRequest() {
 
-    const authContext = useContext(AuthContext);
     const router = useRouter();
 
     const [loading, setLoading] = useState(true);
@@ -35,9 +50,6 @@ export default function StaffingRequest() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            cid: authContext?.user?.cid ?? 0,
-            fullName: authContext?.user?.fullName ?? "",
-            email: authContext?.user?.email ?? "",
             organization: "",
             estimatedPilots: 0,
             start: new Date(),
@@ -47,6 +59,7 @@ export default function StaffingRequest() {
 
     useEffect(() => {
         document.title = "Staffing Request | Memphis ARTCC";
+        setLoading(false);
     }, []);
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -82,59 +95,12 @@ export default function StaffingRequest() {
             <div className="w-100 text-center text-white">
                 <div className="flex flex-row justify-center">
                     <div className="mb-4 text-center text-3xl">
-                    Staffing Request
+                        Staffing Request
                     </div>
                 </div>
                 <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                     <Form {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                            <Row>
-                                <Col lg="8">
-                                    <FormField
-                                        control={form.control}
-                                        name="cid"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-lg text-white">CID</FormLabel>
-                                                <FormControl>
-                                                    <Input disabled {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </Col>
-                                <Col>
-                                    <FormField
-                                        control={form.control}
-                                        name="fullName"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-lg text-white">Name</FormLabel>
-                                                <FormControl>
-                                                    <Input disabled {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </Col>
-                                <Col>
-                                    <FormField
-                                        control={form.control}
-                                        name="email"
-                                        render={({ field }) => (
-                                            <FormItem>
-                                                <FormLabel className="text-lg text-white">Email</FormLabel>
-                                                <FormControl>
-                                                    <Input disabled {...field} />
-                                                </FormControl>
-                                                <FormMessage />
-                                            </FormItem>
-                                        )}
-                                    />
-                                </Col>
-                            </Row>
                             <Row>
                                 <Col>
                                     <FormField
@@ -144,7 +110,7 @@ export default function StaffingRequest() {
                                             <FormItem>
                                                 <FormLabel className="text-lg text-white">Organization</FormLabel>
                                                 <FormControl>
-                                                    <Input {...field} />
+                                                    <Input className="text-black" placeholder="Who are you?" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -157,9 +123,9 @@ export default function StaffingRequest() {
                                         name="estimatedPilots"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-lg text-white">Organization</FormLabel>
+                                                <FormLabel className="text-lg text-white">Estimated Pilots</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" {...field} />
+                                                    <Input className="text-black" type="number" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -172,9 +138,15 @@ export default function StaffingRequest() {
                                         name="start"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-lg text-white">Start Date & Time</FormLabel>
+                                                <FormLabel className="text-lg text-white">Start</FormLabel>
                                                 <FormControl>
-                                                    <Input type="date" {...field} value={field.value.toISOString().split("T")[0]} />
+                                                    <DatePicker
+                                                        selected={field.value}
+                                                        onChange={(date) => form.setValue("start", date as Date)}
+                                                        showTimeSelect
+                                                        dateFormat="Pp"
+                                                        className="w-full rounded-md border p-2 text-black"
+                                                    />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -187,9 +159,20 @@ export default function StaffingRequest() {
                                         name="duration"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-lg text-white">Duration</FormLabel>
+                                                <FormLabel  className="text-lg text-white">Duration</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" {...field} />
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select duration" />
+                                                        </SelectTrigger>
+                                                        <SelectContent className="!text-black">
+                                                            {generateDurationOptions().map((duration) => (
+                                                                <SelectItem key={duration} value={duration}>
+                                                                    {duration}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>

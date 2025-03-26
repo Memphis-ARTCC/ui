@@ -89,7 +89,7 @@ export default function Home() {
             </div>
             <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                 {top.length > 0 ? (
-                    <div className="mt-10 flex items-end justify-center gap-8">
+                    <div className="flex items-end justify-center gap-8">
                         <div className="flex h-24 w-32 flex-col items-center">
                             <Trophy className="mb-1 size-8 text-gray-400" />
                             {top[1] ? (

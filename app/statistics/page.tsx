@@ -150,22 +150,22 @@ export default function StaffingRequest() {
                                                 {getUserStatusString(statsEntry.status)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.deliveryHours}
+                                                {statsEntry.deliveryHours.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.groundHours}
+                                                {statsEntry.groundHours.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.towerHours}
+                                                {statsEntry.towerHours.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.traconHours}
+                                                {statsEntry.traconHours.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.centerHours}
+                                                {statsEntry.centerHours.toFixed(2)}
                                             </TableCell>
                                             <TableCell className="text-lg">
-                                                {statsEntry.totalHours}
+                                                {statsEntry.totalHours.toFixed(2)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
