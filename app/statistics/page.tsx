@@ -65,29 +65,42 @@ export default function StaffingRequest() {
                     setLoading(false);
                 });
         }
-    }, [authContext, router, month, year]);
+        const currentParams = Object.fromEntries(params.entries());
+        const newParams = { ...currentParams, month: `${month}`, year: `${year}` };
+        const queryString = new URLSearchParams(newParams).toString();
 
-    async function nextMonth() {
-        setLoading(true);
-        if (month === 12) {
-            setMonth(1);
-            setYear(year + 1);
-        } else {
-            setMonth(month + 1);
-        }
-        router.push(`/statistics?month=${month}&year=${year}`);
-    }
+        router.push(`?${queryString}`, { scroll: false });
+        setLoading(false);
+    }, [authContext, month, params, router, year]);
 
-    async function previousMonth() {
+    const nextMonth = () => {
         setLoading(true);
-        if (month === 1) {
-            setMonth(12);
-            setYear(year - 1);
-        } else {
-            setMonth(month - 1);
-        }
-        router.push(`/statistics?month=${month}&year=${year}`);
-    }
+
+        setMonth((prevMonth) => {
+            let newMonth = prevMonth + 1;
+            let newYear = year;
+            if (newMonth > 12) {
+                newMonth = 1;
+                newYear += 1;
+            }
+            setYear(newYear);
+            return newMonth;
+        });
+    };
+
+    const previousMonth = () => {
+        setLoading(true);
+        setMonth((prevMonth) => {
+            let newMonth = prevMonth - 1;
+            let newYear = year;
+            if (newMonth < 1) {
+                newMonth = 12;
+                newYear -= 1;
+            }
+            setYear(newYear);
+            return newMonth;
+        });
+    };
 
     return (
         <AuthRoute>
