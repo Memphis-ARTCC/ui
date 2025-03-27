@@ -19,6 +19,7 @@ import {
 import { Response } from "@/models/response";
 import { Stats } from "@/models/stats";
 import { getUserStatusString } from "@/utils/enums";
+import { set } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
@@ -36,6 +37,7 @@ export default function StaffingRequest() {
     const [year, setYear] = useState<number>(parseInt(params.get("year") as string));
 
     const [loading, setLoading] = useState<boolean>(true);
+    const [updated, setUpdated] = useState<boolean>(false);
     const [stats, setStats] = useState<Stats[]>([] as Stats[]);
 
     useEffect(() => {
@@ -65,17 +67,21 @@ export default function StaffingRequest() {
                     setLoading(false);
                 });
         }
-        const currentParams = Object.fromEntries(params.entries());
-        const newParams = { ...currentParams, month: `${month}`, year: `${year}` };
-        const queryString = new URLSearchParams(newParams).toString();
 
-        router.push(`?${queryString}`, { scroll: false });
-        setLoading(false);
-    }, [authContext, month, params, router, year]);
+        if (updated) {
+            const currentParams = Object.fromEntries(params.entries());
+            const newParams = { ...currentParams, month: `${month}`, year: `${year}` };
+            const queryString = new URLSearchParams(newParams).toString();
+
+            router.push(`?${queryString}`, { scroll: false });
+            setLoading(false);
+            setUpdated(false);
+        }
+    }, [authContext, month, params, router, updated, year]);
 
     const nextMonth = () => {
         setLoading(true);
-
+        setUpdated(true);
         setMonth((prevMonth) => {
             let newMonth = prevMonth + 1;
             let newYear = year;
@@ -90,6 +96,7 @@ export default function StaffingRequest() {
 
     const previousMonth = () => {
         setLoading(true);
+        setUpdated(true);
         setMonth((prevMonth) => {
             let newMonth = prevMonth - 1;
             let newYear = year;
