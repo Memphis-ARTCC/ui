@@ -34,7 +34,6 @@ const Sideabr = () => {
 
         fetchOnlineControllers()
             .then((response) => {
-                console.log(response);
                 setOnlineControllers(response.data);
             })
             .catch((error) => {
