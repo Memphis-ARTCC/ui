@@ -12,20 +12,26 @@ import {
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Response } from "@/models/response";
+import { StaffingRequest as StaffingRequestType } from "@/models/staffingRequest";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Row, Col, Button, Spinner } from "react-bootstrap";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { z } from "zod";
 
+import { AuthContext } from "../Providers";
+
 
 const formSchema = z.object({
+    email: z.string().email(),
     organization: z.string().nonempty(),
     estimatedPilots: z.number().positive(),
-    start: z.date(),
+    start: z.date().refine((date) => date > new Date(), {
+        message: "Start date must be in the future",
+    }),
     duration: z.string().nonempty(),
 });
 
@@ -43,6 +49,7 @@ const generateDurationOptions = () => {
 
 export default function StaffingRequest() {
 
+    const authContext = useContext(AuthContext);
     const router = useRouter();
 
     const [loading, setLoading] = useState(true);
@@ -50,6 +57,7 @@ export default function StaffingRequest() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            email: "",
             organization: "",
             estimatedPilots: 0,
             start: new Date(),
@@ -64,13 +72,22 @@ export default function StaffingRequest() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
+        const requestBody: StaffingRequestType = {
+            cid: authContext?.user?.cid as number,
+            fullName: authContext?.user?.fullName as string,
+            email: values.email,
+            organization: values.organization,
+            estimatedPilots: values.estimatedPilots,
+            start: values.start,
+            duration: values.duration,
+        };
         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/staffingrequests`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("accessToken")}`,
             },
-            body: JSON.stringify(values),
+            body: JSON.stringify(requestBody),
         }).then(async (response) => {
             if (!response.ok) {
                 const error = await response.json() as Response<string>;
@@ -105,12 +122,12 @@ export default function StaffingRequest() {
                                 <Col>
                                     <FormField
                                         control={form.control}
-                                        name="organization"
+                                        name="email"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel className="text-lg text-white">Organization</FormLabel>
+                                                <FormLabel className="text-lg text-white">Email</FormLabel>
                                                 <FormControl>
-                                                    <Input className="text-black" placeholder="Who are you?" {...field} />
+                                                    <Input className="text-black" placeholder="email" {...field} />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -120,12 +137,34 @@ export default function StaffingRequest() {
                                 <Col>
                                     <FormField
                                         control={form.control}
+                                        name="organization"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel className="text-lg text-white">Organization</FormLabel>
+                                                <FormControl>
+                                                    <Input className="text-black" placeholder="Organization" {...field} />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <FormField
+                                        control={form.control}
                                         name="estimatedPilots"
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="text-lg text-white">Estimated Pilots</FormLabel>
                                                 <FormControl>
-                                                    <Input className="text-black" type="number" {...field} />
+                                                    <Input
+                                                        className="text-black"
+                                                        type="number"
+                                                        {...field}
+                                                        onChange={(e) => field.onChange(e.target.value === "" ? undefined : Number(e.target.value))}
+                                                    />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -139,6 +178,7 @@ export default function StaffingRequest() {
                                         render={({ field }) => (
                                             <FormItem>
                                                 <FormLabel className="text-lg text-white">Start</FormLabel>
+                                                <br />
                                                 <FormControl>
                                                     <DatePicker
                                                         selected={field.value}
@@ -162,7 +202,7 @@ export default function StaffingRequest() {
                                                 <FormLabel  className="text-lg text-white">Duration</FormLabel>
                                                 <FormControl>
                                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                                        <SelectTrigger>
+                                                        <SelectTrigger className="!text-black">
                                                             <SelectValue placeholder="Select duration" />
                                                         </SelectTrigger>
                                                         <SelectContent className="!text-black">
