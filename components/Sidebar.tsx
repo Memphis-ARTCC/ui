@@ -1,7 +1,10 @@
 "use client";
+import { Airport } from "@/models/airport";
 import { Event } from "@/models/event";
 import { OnlineController } from "@/models/onlineController";
 import { Response } from "@/models/response";
+import { PlaneLanding, PlaneTakeoff } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import Spinner from "./Spinner";
@@ -9,6 +12,7 @@ import Spinner from "./Spinner";
 const Sideabr = () => {
 
     const [onlineControllers, setOnlineControllers] = useState([] as OnlineController[]);
+    const [airports, setAirports] = useState([] as Airport[]);
     const [events, setEvents] = useState([] as Event[]);
 
     const [loading, setLoading] = useState(true);
@@ -21,6 +25,15 @@ const Sideabr = () => {
                 throw new Error(`Error fetching online controllers:\n${error.message}`);
             }
             return await response.json() as Response<OnlineController[]>;
+        };
+
+        const fetchAirports = async () => {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/airports`);
+            if (!response.ok) {
+                const error = await response.json() as Response<string>;
+                throw new Error(`Error fetching airports:\n${error.message}`);
+            }
+            return await response.json() as Response<Airport[]>;
         };
 
         const fetchEvents = async () => {
@@ -38,6 +51,14 @@ const Sideabr = () => {
             })
             .catch((error) => {
                 console.log(`Error fetching online controllers:\n${error}`);
+            });
+
+        fetchAirports()
+            .then((response) => {
+                setAirports(response.data.slice(0, 5));
+            })
+            .catch((error) => {
+                console.log(`Error fetching airports:\n${error}`);
             });
 
         fetchEvents()
@@ -82,8 +103,44 @@ const Sideabr = () => {
                     ) : <Spinner />}
                 </div>
             </div>
+            <div className="flex flex-row justify-center">
+                <div className="mb-8 w-4/5">
+                    <div className="mb-4 text-center text-2xl text-white">
+                        <Link href="/airports">
+                            Airports
+                        </Link>
+                    </div>
+                    {!loading ? (
+                        <>
+                            {airports.length > 0 ? (
+                                <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
+                                    {airports.map(({ icao, arrivals, departures }) => (
+                                        <div key={icao} className="flex w-full items-center justify-between border-b border-gray-500 p-2">
+                                            <span className="text-lg font-bold text-white">{icao}</span>
+                                            <div className="flex items-center space-x-6">
+                                                <div className="flex items-center space-x-2 text-white">
+                                                    <PlaneLanding size={24} />
+                                                    <span className="text-lg">{arrivals}</span>
+                                                </div>
+                                                <div className="flex items-center space-x-2 text-white">
+                                                    <PlaneTakeoff size={24} />
+                                                    <span className="text-lg">{departures}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="mt-4 rounded-2xl bg-gray-700 p-3 text-center text-lg text-white shadow-md">No controllers online</div>
+                            )}
+                        </>
+                    ) : <Spinner />}
+                </div>
+            </div>
             <div className="mb-4 text-center text-2xl text-white">
+                <Link href="/events">
                     Upcoming Events
+                </Link>
             </div>
             {!loading ? (
                 <>
