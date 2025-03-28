@@ -1,5 +1,5 @@
 export type StaffingRequest = {
-    id: number;
+    id?: number;
     cid: number;
     fullName: string;
     email: string;
