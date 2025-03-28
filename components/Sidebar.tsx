@@ -55,7 +55,7 @@ const Sideabr = () => {
 
         fetchAirports()
             .then((response) => {
-                setAirports(response.data.slice(0, 5));
+                setAirports(response.data.slice(0, 5).sort((a, b) => (b.arrivals + b.departures) - (a.arrivals - a.departures)));
             })
             .catch((error) => {
                 console.log(`Error fetching airports:\n${error}`);

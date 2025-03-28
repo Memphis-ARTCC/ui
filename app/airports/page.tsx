@@ -188,7 +188,7 @@ export default function Airports() {
 
         fetchAirports()
             .then((response) => {
-                setAirports(response.data);
+                setAirports(response.data.sort((a, b) => a.name.localeCompare(b.name)));
                 setLoading(false);
             })
             .catch((error) => {
