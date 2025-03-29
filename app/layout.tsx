@@ -1,6 +1,7 @@
 import "./globals.scss";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
 import Sidebar from "@/components/Sidebar";
 import { Ubuntu } from "next/font/google";
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                                 </Row>
                             </Container>
                         </div>
+                        <Footer />
                         <ToastContainer
                             position="bottom-center"
                             autoClose={5000}
