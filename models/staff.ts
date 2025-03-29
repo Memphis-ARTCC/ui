@@ -1,0 +1,34 @@
+export interface Staff {
+    atm?: string;
+    atmEmail?: string;
+    datm?: string;
+    datmEmail?: string;
+    ta?: string;
+    taEmail?: string;
+    ata?: string;
+    ataEmail?: string;
+    wm?: string;
+    wmEmail?: string;
+    awm?: string;
+    awmEmail?: string;
+    webTeam?: string[];
+    webTeamEmail?: string;
+    ec?: string;
+    ecEmail?: string;
+    aec?: string;
+    aecEmail?: string;
+    eventsTeam?: string[];
+    eventsTeamEmail?: string;
+    fe?: string;
+    feEmail?: string;
+    afe?: string;
+    afeEmail?: string;
+    facilitiesTeam?: string[];
+    facilitiesTeamEmail?: string;
+    socialMediaTeam?: string[];
+    socialMediaTeamEmail?: string;
+    ins?: string[];
+    insEmail?: string;
+    mtr?: string[];
+    mtrEmail?: string;
+}
