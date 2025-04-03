@@ -118,8 +118,8 @@ export default function Home() {
                     <>
                         {news.length > 0 ? (
                             <>
-                                {news.map((newsEntry, index) => (
-                                    <div key={index} className="mb-2 flex items-center justify-between p-2 text-base text-white">
+                                {news.map((newsEntry) => (
+                                    <div key={newsEntry.id} className="mb-2 flex items-center justify-between p-2 text-base text-white">
                                         <div className="flex items-center gap-2">
                                             <span className="rounded-full bg-blue-600 px-3 py-1 text-lg font-semibold text-white">
                                                 {newsEntry.author}

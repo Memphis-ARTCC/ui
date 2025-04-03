@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 
 import Spinner from "./Spinner";
 
-const Sideabr = () => {
+const Sideabar = () => {
 
     const [onlineControllers, setOnlineControllers] = useState([] as OnlineController[]);
     const [airports, setAirports] = useState([] as Airport[]);
@@ -170,4 +170,4 @@ const Sideabr = () => {
     );
 };
 
-export default Sideabr;
+export default Sideabar;

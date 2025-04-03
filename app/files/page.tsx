@@ -29,8 +29,8 @@ const FileEntry = ({ files }: FileEntryProps) => {
                 <TableBody>
                     {files.length > 0 ? (
                         <>
-                            {files.map((file, index) => (
-                                <TableRow key={index}>
+                            {files.map((file) => (
+                                <TableRow key={file.id}>
                                     <TableCell className="text-lg">{file.title}</TableCell>
                                     <TableCell className="text-lg">{file.description}</TableCell>
                                     <TableCell className="text-lg">{file.version}</TableCell>
