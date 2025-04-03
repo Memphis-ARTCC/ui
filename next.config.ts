@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
                 protocol: "https",
                 hostname: "memphis.nyc3.cdn.digitaloceanspaces.com",
             },
+            {
+                protocol: "https",
+                hostname: "memphis-artcc.nyc3.digitaloceanspaces.com"
+            }
         ],
     },
 };

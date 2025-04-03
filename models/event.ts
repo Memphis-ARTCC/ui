@@ -1,12 +1,11 @@
 import { EventPosition } from "./eventPosition";
-import { Upload } from "./upload";
 
 export type Event  = {
     id: number;
-    name: string;
+    title: string;
     description: string;
     host: string;
-    banner: Upload;
+    bannerUrl?: string;
     start: Date;
     end: Date;
     positions: EventPosition[];
