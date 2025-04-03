@@ -4,12 +4,13 @@ import { Event } from "@/models/event";
 import { OnlineController } from "@/models/onlineController";
 import { Response } from "@/models/response";
 import { PlaneLanding, PlaneTakeoff } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import Spinner from "./Spinner";
 
-const Sideabr = () => {
+const Sideabar = () => {
 
     const [onlineControllers, setOnlineControllers] = useState([] as OnlineController[]);
     const [airports, setAirports] = useState([] as Airport[]);
@@ -37,7 +38,7 @@ const Sideabr = () => {
         };
 
         const fetchEvents = async () => {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/events?page=1&size=5`);
             if (!response.ok) {
                 const error = await response.json() as Response<string>;
                 throw new Error(`Error fetching events:\n${error.message}`);
@@ -148,6 +149,15 @@ const Sideabr = () => {
                         <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
                             {events.map((event, index) => (
                                 <div key={event.id} className={index == events.length - 1 ? "" : "mb-4"}>
+                                    <Link href={`/events/${event.id}`}>
+                                        <Image
+                                            src={event.bannerUrl || "/images/default-banner.jpg"}
+                                            alt={event.title}
+                                            width={500}
+                                            height={300}
+                                            className="rounded-2xl"
+                                        />
+                                    </Link>
                                 </div>
                             ))}
                         </div>
@@ -160,4 +170,4 @@ const Sideabr = () => {
     );
 };
 
-export default Sideabr;
+export default Sideabar;

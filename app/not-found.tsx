@@ -17,8 +17,7 @@ export default function NotFound() {
                     404 - Page Not Found
                 </h2>
                 <div className="flex flex-col items-center py-4 text-lg">
-                    <button className="w-24 rounded-md bg-sky-800 p-2 text-center text-white shadow-md transition-all hover:bg-sky-700"
-                        onClick={goBack}>
+                    <button className="mt-4 w-auto rounded-md bg-blue-700 p-2 text-center text-white shadow-md transition-all hover:bg-blue-600" onClick={goBack}>
                         Go Back
                     </button>
                 </div>

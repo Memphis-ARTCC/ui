@@ -1,5 +1,6 @@
 "use client";
 
+import Spinner from "@/components/Spinner";
 import { Response } from "@/models/response";
 import { Staff } from "@/models/staff";
 import { useEffect, useState } from "react";
@@ -61,7 +62,7 @@ const StaffTeam = ({ name, team, email }: StaffTeamProps) => {
     );
 };
 
-export default function StaffingRequest() {
+export default function StaffPage() {
     const [loading, setLoading] = useState<boolean>(true);
     const [staff, setStaff] = useState({} as Staff);
 
@@ -92,13 +93,6 @@ export default function StaffingRequest() {
             });
     }, []);
 
-    if (loading) {
-        return (
-            <div className="flex h-64 items-center justify-center">
-            </div>
-        );
-    }
-
     return (
         <div className="w-100 text-center text-white">
             <div className="flex flex-row justify-center">
@@ -107,69 +101,73 @@ export default function StaffingRequest() {
                 </div>
             </div>
             <div className="rounded-2xl bg-gray-700 p-3 shadow-md">
-                <Row>
-                    <Col>
-                        <StaffPosition position="Air Traffic Manager" email={staff.atmEmail} name={staff.atm} />
-                    </Col>
-                    <Col>
-                        <StaffPosition position="Deputy Air Traffic Manager" email={staff.datmEmail} name={staff.datm} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffPosition position="Training Administrator" email={staff.taEmail} name={staff.ta} />
-                    </Col>
-                    <Col>
-                        <StaffPosition position="Assistant Training Administrator" email={staff.ataEmail} name={staff.ata} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffPosition position="Webmaster" email={staff.wmEmail} name={staff.wm} />
-                    </Col>
-                    <Col>
-                        <StaffPosition position="Assistant Webmaster" email={staff.awmEmail} name={staff.awm} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffTeam name="Web Team" team={staff.webTeam} email={staff.webTeamEmail} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffPosition position="Events Coordinator" email={staff.ecEmail} name={staff.ec} />
-                    </Col>
-                    <Col>
-                        <StaffPosition position="Assistant Events Coordinator" email={staff.aecEmail} name={staff.aec} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffTeam name="Events Team" team={staff.eventsTeam} email={staff.eventsTeamEmail} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffPosition position="Facility Engineer" email={staff.feEmail} name={staff.fe} />
-                    </Col>
-                    <Col>
-                        <StaffPosition position="Assistant Facility Engineer" email={staff.afeEmail} name={staff.afe} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffTeam name="Social Media Team" team={staff.socialMediaTeam} email={staff.socialMediaTeamEmail} />
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <StaffTeam name="Instructors" team={staff.ins} email={staff.insEmail} />
-                    </Col>
-                    <Col>
-                        <StaffTeam name="Mentors" team={staff.mtr} email={staff.mtrEmail} />
-                    </Col>
-                </Row>
+                {!loading ? (
+                    <>
+                        <Row>
+                            <Col>
+                                <StaffPosition position="Air Traffic Manager" email={staff.atmEmail} name={staff.atm} />
+                            </Col>
+                            <Col>
+                                <StaffPosition position="Deputy Air Traffic Manager" email={staff.datmEmail} name={staff.datm} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffPosition position="Training Administrator" email={staff.taEmail} name={staff.ta} />
+                            </Col>
+                            <Col>
+                                <StaffPosition position="Assistant Training Administrator" email={staff.ataEmail} name={staff.ata} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffPosition position="Webmaster" email={staff.wmEmail} name={staff.wm} />
+                            </Col>
+                            <Col>
+                                <StaffPosition position="Assistant Webmaster" email={staff.awmEmail} name={staff.awm} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffTeam name="Web Team" team={staff.webTeam} email={staff.webTeamEmail} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffPosition position="Events Coordinator" email={staff.ecEmail} name={staff.ec} />
+                            </Col>
+                            <Col>
+                                <StaffPosition position="Assistant Events Coordinator" email={staff.aecEmail} name={staff.aec} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffTeam name="Events Team" team={staff.eventsTeam} email={staff.eventsTeamEmail} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffPosition position="Facility Engineer" email={staff.feEmail} name={staff.fe} />
+                            </Col>
+                            <Col>
+                                <StaffPosition position="Assistant Facility Engineer" email={staff.afeEmail} name={staff.afe} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffTeam name="Social Media Team" team={staff.socialMediaTeam} email={staff.socialMediaTeamEmail} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <StaffTeam name="Instructors" team={staff.ins} email={staff.insEmail} />
+                            </Col>
+                            <Col>
+                                <StaffTeam name="Mentors" team={staff.mtr} email={staff.mtrEmail} />
+                            </Col>
+                        </Row>
+                    </>
+                ) : <Spinner />}
             </div>
         </div>
     );
